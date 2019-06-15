@@ -1,0 +1,4 @@
+praw
+re
+os
+python-dotenv
