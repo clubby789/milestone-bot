@@ -2,6 +2,8 @@ import praw,re
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
+import urllib2
+
 home = 1
 try:
 	from win10toast import ToastNotifier
@@ -44,6 +46,8 @@ def milestone(karma):
 	else:
 		return -1
 
+def wake():
+	urllib2.urlopen('https://desolate-tundra-24392.herokuapp.com/')
 
 if home==1:
 	toaster = ToastNotifier()
@@ -74,8 +78,13 @@ reddit = praw.Reddit(client_id=client_id,
 
 subreddit = reddit.subreddit(sub)
 print("Bot started!")
+startTime=time.time()
 
 while True:
+	curTime = time.time()
+	if curTime - startTime >= (25*60):
+		wake()
+		startTime = curTime
 	for submission in subreddit.new(limit=1000):
 
 		author = submission.author
