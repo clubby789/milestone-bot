@@ -47,7 +47,10 @@ def milestone(karma):
 		return -1
 
 def wake():
-	urllib.request.urlopen('https://desolate-tundra-24392.herokuapp.com/')
+	try:
+		urllib.request.urlopen('https://desolate-tundra-24392.herokuapp.com/')
+	except:
+		pass
 
 if home==1:
 	toaster = ToastNotifier()
