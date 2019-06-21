@@ -2,7 +2,7 @@ import praw,re
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
-import urllib2
+import urllib.request
 
 home = 1
 try:
@@ -47,7 +47,7 @@ def milestone(karma):
 		return -1
 
 def wake():
-	urllib2.urlopen('https://desolate-tundra-24392.herokuapp.com/')
+	urllib.request.urlopen('https://desolate-tundra-24392.herokuapp.com/')
 
 if home==1:
 	toaster = ToastNotifier()
