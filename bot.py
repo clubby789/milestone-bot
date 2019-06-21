@@ -2,8 +2,12 @@ import praw,re
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
+home = 1
+try:
+	from win10toast import ToastNotifier
+except:
+	home = 0
 
-from win10toast import ToastNotifier
 with open ("blacklist.txt", 'r') as f:
 	blacklist = f.readlines()
 blacklist = [line.rstrip('\n') for line in blacklist]
@@ -41,7 +45,8 @@ def milestone(karma):
 		return -1
 
 
-toaster = ToastNotifier()
+if home==1:
+	toaster = ToastNotifier()
 
 dotenv_path = join(dirname(__file__), '.env')
 try:
@@ -97,8 +102,9 @@ while True:
 					author.message('Karma Milestone', milestoneText.format(karma=karma))
 					logText = "Sent message to {author} for getting {karma} karma".format(author=author,karma=karma)
 					print(logText)
-					toaster.show_toast("Message sent!", logText, threaded=True,
-					icon_path=None,duration=3)
+					if home==1:
+						toaster.show_toast("Message sent!", logText, threaded=True,
+						icon_path=None,duration=3)
 					try:
 						with open("logtext.txt",'a') as f:
 							f.write("\n"+logText)
