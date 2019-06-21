@@ -3,7 +3,7 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 import urllib.request
-
+import time
 home = 1
 try:
 	from win10toast import ToastNotifier
