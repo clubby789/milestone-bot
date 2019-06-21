@@ -68,7 +68,7 @@ reddit = praw.Reddit(client_id=client_id,
 					password=password)
 
 subreddit = reddit.subreddit(sub)
-
+print("Bot started!")
 
 while True:
 	for submission in subreddit.new(limit=1000):
