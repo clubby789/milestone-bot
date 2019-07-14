@@ -31,7 +31,7 @@ def milestone(karma):
 		return -1
 	if karma.endswith("6969"):
 		return 1
-	elif karma.endswith("420"):
+	elif karma.endswith("420") and int(karma) < 10000:
 		return 1
 	elif karma == "666":
 		return 1
@@ -49,7 +49,7 @@ def milestone(karma):
 def wake():
 	try:
 		urllib.request.urlopen('https://desolate-tundra-24392.herokuapp.com/')
-	except:
+	except Exception:
 		pass
 
 if home==1:
