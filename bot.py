@@ -1,5 +1,4 @@
-import praw,re
-import os
+import praw,re,os
 from os.path import join, dirname
 from dotenv import load_dotenv
 import urllib.request
@@ -13,8 +12,10 @@ except:
 with open ("blacklist.txt", 'r') as f:
 	blacklist = f.readlines()
 blacklist = [line.rstrip('\n') for line in blacklist]
+#Some users break this apparently? 
+#Could also add some kind of opt-out system
 
-def isConsecutive(number):
+def isConsecutive(number): #Checks if number is consecutive (e.g. 12345)
 	l = list(str(number))
 	l = [ int(x) for x in l ]
 	cons = 1
@@ -31,7 +32,7 @@ def milestone(karma):
 		return -1
 	if karma.endswith("6969"):
 		return 1
-	elif karma.endswith("420") and int(karma) < 10000:
+	elif karma.endswith("420") and int(karma) < 6000:
 		return 1
 	elif karma == "666":
 		return 1
@@ -45,15 +46,17 @@ def milestone(karma):
 		return 1
 	else:
 		return -1
+	#Return value of 1 indicates milestone; in future possibly 
+	#based on the actual number for custom messages
 
-def wake():
+def wake(): #Dyno dies if it doesn't get regular requests
 	try:
 		urllib.request.urlopen('https://desolate-tundra-24392.herokuapp.com/')
 	except Exception:
 		pass
 
 if home==1:
-	toaster = ToastNotifier()
+	toaster = ToastNotifier() #If running on home system, create a notifier
 
 dotenv_path = join(dirname(__file__), '.env')
 try:
@@ -67,10 +70,10 @@ username=os.environ.get('rUsername')
 password=os.environ.get('password')
 sub=os.environ.get('sub')
 botAuthor=os.environ.get('author')
+#Get env variables
 
-
-milestoneText = """You've hit a karma milestone ({karma}). Maybe you should make a post about it!
-
+milestoneText = """You've hit a karma milestone ({karma}). Maybe you should make a post about it!      #Create message template
+									
 ^(I am a bot, made by u/"""+botAuthor +""". If I'm doing something wrong, please message my author)"""
 
 reddit = praw.Reddit(client_id=client_id,
@@ -78,7 +81,7 @@ reddit = praw.Reddit(client_id=client_id,
 					user_agent=user_agent,
 					username=username,
 					password=password)
-
+#Authenticate with Reddit
 subreddit = reddit.subreddit(sub)
 print("Bot started!")
 startTime=time.time()
@@ -86,10 +89,12 @@ startTime=time.time()
 while True:
 	curTime = time.time()
 	if curTime - startTime >= (25*60):
-		wake()
+		wake() #Ping server every 25 mins
 		startTime = curTime
 	for submission in subreddit.new(limit=1000):
-
+		#Fetch 1000 posts and check their authors
+		#TODO: Switch this to Pushshift and fetch last day of posts
+		#Possibly also comments
 		author = submission.author
 		if author == '[removed]' or author == None or author in blacklist:
 			try:
@@ -108,8 +113,9 @@ while True:
 			send = True
 			for message in reddit.inbox.sent(limit=50):
 				if message.dest == author:
-					send = False
-			if send:
+					send = False 		#Make sure we haven't already messaged author
+								#about the milestone. Also reduces spam for 
+			if send:				#users hitting multiple milestones
 				try:
 					author.message('Karma Milestone', milestoneText.format(karma=karma))
 					logText = "Sent message to {author} for getting {karma} karma".format(author=author,karma=karma)
