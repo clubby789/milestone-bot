@@ -72,8 +72,9 @@ sub=os.environ.get('sub')
 botAuthor=os.environ.get('author')
 #Get env variables
 
-milestoneText = """You've hit a karma milestone ({karma}). Maybe you should make a post about it!      
-									
+
+milestoneText = """You've hit a karma milestone ({karma})!
+
 ^(I am a bot, made by u/"""+botAuthor +""". If I'm doing something wrong, please message my author)"""
 
 reddit = praw.Reddit(client_id=client_id,
