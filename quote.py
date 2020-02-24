@@ -1,10 +1,11 @@
 import requests
+import json
 def getQuote():
 	try:
-		r = requests.get("http://inspirobot.me/api?generate=true")
-		quote = r.text
+		url = "https://inspirobot.me/api?generateFlow=1"
+		r = requests.get(url)
+
+		quote = json.loads(r.text)['data'][1]['text']
 	except:
-		return -1
-	if quote.startswith("https://generated.inspirobot.me/a/"):
-		return quote
-	return -1
+		quote = -1
+	return quote

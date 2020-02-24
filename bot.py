@@ -61,7 +61,7 @@ def quoteString():
 	if quote == -1:
 		return "Sorry, couldn't get your inspirational quote :("
 	else:
-		return "[Inspirational quote]({})".format(quote)
+		return "Inspirational quote: {} ^(From inspirobot.me)".format(quote)
 
 if home==1:
 	toaster = ToastNotifier() #If running on home system, create a notifier
