@@ -3,9 +3,10 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 import urllib.request
 import time
-home = 1
+import quote
 try:
 	from win10toast import ToastNotifier
+	home = 1
 except:
 	home = 0
 
@@ -55,6 +56,13 @@ def wake(): #Dyno dies if it doesn't get regular requests
 	except Exception:
 		pass
 
+def quoteString():
+	quote = getQuote()
+	if quote == -1:
+		return "Sorry, couldn't get your inspirational quote :("
+	else:
+		return "[Inspirational quote]({})".format(quote)
+
 if home==1:
 	toaster = ToastNotifier() #If running on home system, create a notifier
 
@@ -75,7 +83,9 @@ botAuthor=os.environ.get('author')
 
 milestoneText = """You've hit a karma milestone ({karma})!
 
-^(I am a bot, made by u/"""+botAuthor +""". If I'm doing something wrong, please message my author)"""
+^(I am a bot, made by u/"""+botAuthor +""". If I'm doing something wrong, please message my author)
+
+{quote}"""
 
 reddit = praw.Reddit(client_id=client_id,
 					client_secret=client_secret,
@@ -118,7 +128,7 @@ while True:
 								#about the milestone. Also reduces spam for 
 			if send:				#users hitting multiple milestones
 				try:
-					author.message('Karma Milestone', milestoneText.format(karma=karma))
+					author.message('Karma Milestone', milestoneText.format(karma=karma, quote=quoteString()))
 					logText = "Sent message to {author} for getting {karma} karma".format(author=author,karma=karma)
 					print(logText)
 					if home==1:
